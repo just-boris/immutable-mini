@@ -8,6 +8,7 @@ describe('ImmutableArray', () => {
         expect(array.get(1)).toEqual(2);
         expect(array.get('1')).toEqual(2);
         expect(array.get(3)).toNotExist();
+        expect(array.size).toEqual(3);
         expect(array.toJS()).toEqual([1, 2, 3]);
     });
 
@@ -22,6 +23,18 @@ describe('ImmutableArray', () => {
         /* eslint-disable no-sparse-arrays */
         expect(array.set(4, 'extra value').toJS()).toEqual([1, 2, 3, /* hole */, 'extra value']);
         /* eslint-enable no-sparse-arrays */
+        expect(array.toJS()).toEqual([1, 2, 3]);
+    });
+
+    it('delete values', () => {
+        const array = new ImmutableArray(freeze([1, 2, 3]));
+        expect(array.delete(1).toJS()).toEqual([1, 3]);
+        expect(array.toJS()).toEqual([1, 2, 3]);
+    });
+
+    it('insert values', () => {
+        const array = new ImmutableArray(freeze([1, 2, 3]));
+        expect(array.insert(1, 'test').toJS()).toEqual([1, 'test', 2, 3]);
         expect(array.toJS()).toEqual([1, 2, 3]);
     });
 

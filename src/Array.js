@@ -3,6 +3,10 @@ import toJS from './toJS';
 
 export default class ImmutableArray extends BasicImmutable {
 
+    get size () {
+        return this.toJS().length;
+    }
+
     set (index, value) {
         if (toJS(this.get(index)) === value) {
             return this;
@@ -12,21 +16,21 @@ export default class ImmutableArray extends BasicImmutable {
             copy = this.toJS().slice();
             copy[index] = value;
         } else {
-            copy = this.toJS().map((item, i) => i === index ? value : item);
+            copy = this.toJS().slice(0, index).concat([value], this.toJS().slice(index + 1));
         }
         return new ImmutableArray(copy);
     }
 
     delete (index) {
         return new ImmutableArray([
-            ...this.toJS().slice(0, index - 1),
+            ...this.toJS().slice(0, index),
             ...this.toJS().slice(index + 1)
         ]);
     }
 
     insert (index, value) {
         return new ImmutableArray([
-            ...this.toJS().slice(0, index, -1),
+            ...this.toJS().slice(0, index),
             value,
             ...this.toJS().slice(index)
         ]);
