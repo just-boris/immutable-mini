@@ -5,8 +5,9 @@ const ImmutableMini = require('../');
 const suites = [];
 
 function prepareArray () {
-    this.array = new Array(1024);
-    for (var ii = 0; ii < 1024; ii++) {
+    this.ARRAY_LEN = 1024;
+    this.array = new Array(this.ARRAY_LEN);
+    for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
         this.array[ii] = ii;
     }
 }
@@ -31,7 +32,7 @@ suites.push(new Benchmark.Suite('access')
         setup: prepareArray,
         fn () {
             var list = new Immutable.List(this.array);
-            for (var ii = 0; ii < 1024; ii++) {
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
                 list.get(ii);
             }
         }
@@ -40,7 +41,7 @@ suites.push(new Benchmark.Suite('access')
         setup: prepareArray,
         fn () {
             var list = new ImmutableMini.Array(this.array);
-            for (var ii = 0; ii < 1024; ii++) {
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
                 list.get(ii);
             }
         }
@@ -104,7 +105,7 @@ suites.push(new Benchmark.Suite('update')
         setup: prepareArray,
         fn () {
             var list = new Immutable.List(this.array);
-            for (var ii = 0; ii < 1024; ii++) {
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
                 list = list.update(ii, val => val * 2);
             }
         }
@@ -113,8 +114,29 @@ suites.push(new Benchmark.Suite('update')
         setup: prepareArray,
         fn () {
             var list = new ImmutableMini.Array(this.array);
-            for (var ii = 0; ii < 1024; ii++) {
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
                 list = list.update(ii, val => val * 2);
+            }
+        }
+    })
+);
+
+suites.push(new Benchmark.Suite('toJS')
+    .add('immutable', {
+        setup: prepareArray,
+        fn () {
+            var list = new Immutable.List(this.array);
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
+                list.toJS();
+            }
+        }
+    })
+    .add('mini', {
+        setup: prepareArray,
+        fn () {
+            var list = new ImmutableMini.Array(this.array);
+            for (var ii = 0; ii < this.ARRAY_LEN; ii++) {
+                list.toJS();
             }
         }
     })

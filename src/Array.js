@@ -11,14 +11,15 @@ export default class ImmutableArray extends BasicImmutable {
         if (toJS(this.get(index)) === value) {
             return this;
         }
-        var copy;
-        if (this.toJS().length < index) {
-            copy = this.toJS().slice();
-            copy[index] = value;
+        const source = this.toJS();
+        var dest;
+        if (source.length < index) {
+            dest = source.slice();
+            dest[index] = value;
         } else {
-            copy = this.toJS().slice(0, index).concat([value], this.toJS().slice(index + 1));
+            dest = source.slice(0, index).concat([value], source.slice(index + 1));
         }
-        return new ImmutableArray(copy);
+        return new ImmutableArray(dest);
     }
 
     delete (index) {
